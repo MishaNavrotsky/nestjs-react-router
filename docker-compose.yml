@@ -27,7 +27,8 @@ services:
     ports:
       - '1337:1337'
     volumes:
-      - ./backend/src:/usr/src/app/src
+      - ./backend/.:/usr/src/app
+      - /usr/src/app/node_modules
     command: npm run start:dev
     networks:
       - be-db-network
@@ -40,10 +41,11 @@ services:
     env_file:
       - ./frontend/.env.development
     ports:
-      - '3000:3000'
+      - '5173:5173'
     volumes:
-      - ./frontend/src:/usr/src/app/src
-    command: npm run dev
+      - ./frontend/.:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run dev -- --host
     networks:
       - be-fe-network
 
