@@ -1,0 +1,54 @@
+services:
+  database:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - be-db-network
+
+  cache:
+    image: redis
+    restart: always
+    command: redis-server --save 20 1 --loglevel warning --requirepass redis
+    networks:
+      - be-db-network
+  backend:
+    depends_on:
+      - database
+      - cache
+    build:
+      context: ./backend
+    container_name: backend
+    env_file:
+      - ./backend/.env.development
+    ports:
+      - '1337:1337'
+    volumes:
+      - ./backend/src:/usr/src/app/src
+    command: npm run start:dev
+    networks:
+      - be-db-network
+      - be-fe-network
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    env_file:
+      - ./frontend/.env.development
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./frontend/src:/usr/src/app/src
+    command: npm run dev
+    networks:
+      - be-fe-network
+
+networks:
+  be-db-network:
+    driver: bridge
+  be-fe-network:
+    driver: bridge
