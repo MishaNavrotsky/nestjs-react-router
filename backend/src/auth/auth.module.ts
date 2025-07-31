@@ -7,6 +7,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
+import { CacheModule } from 'src/cache/cache.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { LocalStrategy } from './strategies/local.strategy';
       signOptions: { expiresIn: process.env.JWT_TOKEN_EXPIRES_IN || '60m' },
     }),
     TypeOrmModule.forFeature([User]),
+    CacheModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy]

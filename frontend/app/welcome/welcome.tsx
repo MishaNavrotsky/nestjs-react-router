@@ -1,9 +1,30 @@
+import { Backend } from "~/libs/HttpClient";
 import logoDark from "./logo-dark.svg";
 import logoLight from "./logo-light.svg";
+import { useEffect } from "react";
 
 export function Welcome() {
+  const singin = async () => {
+    await Backend.post('/auth/signin', { email: 'test@test.com', password: 'test123' });
+  }
+  const signout = async () => {
+    Backend.post('/auth/signout');
+  }
+  const refresh = async () => {
+    Backend.post('/auth/refresh')
+  }
+  const test = async () => {
+    Backend.get('/test');
+  }
   return (
     <main className="flex items-center justify-center pt-16 pb-4">
+      <div className="flex-1 flex gap-10">
+        <button onClick={singin}> signin </button>
+        <button onClick={signout}> signout </button>
+        <button onClick={refresh}> refresh </button>
+        <button onClick={test}> test </button>
+      </div>
+
       <div className="flex-1 flex flex-col items-center gap-16 min-h-0">
         <header className="flex flex-col items-center gap-9">
           <div className="w-[500px] max-w-[100vw] p-4">

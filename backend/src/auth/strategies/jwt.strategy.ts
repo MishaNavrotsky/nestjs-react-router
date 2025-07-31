@@ -7,15 +7,20 @@ import { JwtPayload } from '../interfaces/jwt-payload.type';
 import { AuthService } from '../auth.service';
 import { InvalidJwtError } from '../auth.errors';
 import { SafeUser } from 'src/database/entities/user.entity';
+import { Request } from 'express';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    config: ConfigService,
-    private authService: AuthService
+    private config: ConfigService,
+    private authService: AuthService,
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        (request: Request) => {
+          return request.cookies?.['access_token'];
+        }
+      ]),
       ignoreExpiration: false,
       secretOrKey: config.get<string>('JWT_SECRET')!,
     });
