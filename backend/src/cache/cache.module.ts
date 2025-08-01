@@ -31,7 +31,7 @@ import { CacheService } from './cache.service';
           }),
           createKeyv(redisUri)
         ],
-        nonBlocking: true,
+        nonBlocking: false, // should be blocking because if the local cache is missing a key but it is present in the redis Promise.race will take the first one available. 
       }
     }
   })],
