@@ -1,7 +1,6 @@
 import {Backend} from "~/libs/HttpClient";
 import logoDark from "./logo-dark.svg";
 import logoLight from "./logo-light.svg";
-import {useEffect} from "react";
 
 export function Welcome() {
     const singin = async () => {
