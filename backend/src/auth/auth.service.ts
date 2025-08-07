@@ -114,8 +114,9 @@ export class AuthService {
   }
 
   async refreshJwt(jwtToken: string, refreshToken: string) {
-    const payload =
-      await this.jwtService.verifyAsync<RefreshPayload>(refreshToken);
+    const payload = await this.jwtService
+      .verifyAsync<RefreshPayload>(refreshToken)
+      .catch();
     const jti = await this.cacheService.get(
       AuthService.JtiRefreshCacheKey(payload.id),
     );

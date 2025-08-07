@@ -8,6 +8,8 @@ services:
       - POSTGRES_PASSWORD=postgres
     networks:
       - be-db-network
+    ports:
+      - '5432:5432'
 
   cache:
     image: redis
@@ -15,6 +17,9 @@ services:
     command: redis-server --save 20 1 --loglevel warning --requirepass redis
     networks:
       - be-db-network
+    ports:
+      - '6379:6379'
+
   backend:
     depends_on:
       - database
