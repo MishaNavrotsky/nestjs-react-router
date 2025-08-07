@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { config } from '../config/env.config';
 
 @Injectable()
 export class CacheService {
@@ -13,7 +14,7 @@ export class CacheService {
   async set<T>(
     key: string,
     value: T,
-    ttl = Number(process.env.REDIS_CACHE_TTL || 0),
+    ttl = config.REDIS_CACHE_TTL,
   ): Promise<void> {
     await this.cache.set(key, value, ttl);
   }

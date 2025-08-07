@@ -8,13 +8,14 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { CacheModule } from 'src/cache/cache.module';
+import { config } from '../config/env.config';
 
 @Module({
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: process.env.JWT_SECRET || 'i_am_a_secret',
-      signOptions: { expiresIn: process.env.JWT_TOKEN_EXPIRES_IN || '60m' },
+      secret: config.JWT_SECRET,
+      signOptions: { expiresIn: config.JWT_TOKEN_EXPIRES_IN },
     }),
     TypeOrmModule.forFeature([User]),
     CacheModule,

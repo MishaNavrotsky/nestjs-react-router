@@ -15,8 +15,8 @@ import SignUpUserDto from './dtos/signup-user.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthenticatedRequest } from './interfaces/authenticated-request.interface';
 import { Request, Response } from 'express';
-import { isProd } from 'src/consts';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { isProd } from '../config/env.config';
 
 @Controller('auth')
 export class AuthController {

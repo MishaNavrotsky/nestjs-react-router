@@ -1,22 +1,22 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { isDev } from 'src/consts';
 import { User } from './entities/user.entity';
 import { Item } from './entities/item.entity';
+import { config, isDev } from '../config/env.config';
 
-const config: TypeOrmModuleOptions = {
+const dbConfig: TypeOrmModuleOptions = {
   type: 'postgres',
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT || 5432),
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  host: config.DB_HOST,
+  port: config.DB_PORT,
+  username: config.DB_USER,
+  password: config.DB_PASSWORD,
+  database: config.DB_NAME,
   entities: [User, Item],
   synchronize: isDev,
 };
 
 @Module({
-  imports: [TypeOrmModule.forRoot(config)],
+  imports: [TypeOrmModule.forRoot(dbConfig)],
   exports: [TypeOrmModule],
 })
 export class DatabaseModule {}

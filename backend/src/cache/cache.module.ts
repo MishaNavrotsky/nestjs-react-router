@@ -3,15 +3,16 @@ import { CacheModule as CM } from '@nestjs/cache-manager';
 import { createKeyv, Keyv } from '@keyv/redis';
 import { CacheableMemory } from 'cacheable';
 import { CacheService } from './cache.service';
+import { config } from '../config/env.config';
 
 @Module({
   imports: [
     CM.registerAsync({
       useFactory: () => {
-        const host = process.env.REDIS_HOST || 'localhost';
-        const port = process.env.REDIS_PORT || '6379';
-        const password = process.env.REDIS_PASSWORD || '';
-        const dbNumber = process.env.REDIS_DB_NUMBER || '0';
+        const host = config.REDIS_HOST;
+        const port = config.REDIS_PORT;
+        const password = config.REDIS_PASSWORD;
+        const dbNumber = config.REDIS_DB_NUMBER;
 
         const redisUri = password
           ? `redis://:${password}@${host}:${port}/${dbNumber}`
@@ -29,8 +30,8 @@ import { CacheService } from './cache.service';
           stores: [
             new Keyv({
               store: new CacheableMemory({
-                ttl: process.env.LOCAL_CACHE_TTL || 60000,
-                lruSize: Number(process.env.LOCAL_CACHE_LRU_SIZE || 50000),
+                ttl: config.LOCAL_CACHE_TTL,
+                lruSize: config.LOCAL_CACHE_LRU_SIZE,
               }),
             }),
             createKeyv(redisUri),
