@@ -1,5 +1,5 @@
-import type { FunctionComponent as FC } from 'react';
+import type {FunctionComponent as FC} from 'react';
 
 declare global {
-  type FunctionComponent<P = {}> = FC<P>;
+    type FunctionComponent<P = {}> = FC<P>;
 }

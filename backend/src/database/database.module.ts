@@ -13,13 +13,10 @@ const config: TypeOrmModuleOptions = {
   database: process.env.DB_NAME,
   entities: [User, Item],
   synchronize: isDev,
-}
-
+};
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot(config),
-  ],
-  exports: [TypeOrmModule]
+  imports: [TypeOrmModule.forRoot(config)],
+  exports: [TypeOrmModule],
 })
-export class DatabaseModule { }
+export class DatabaseModule {}

@@ -5,37 +5,42 @@ import { CacheableMemory } from 'cacheable';
 import { CacheService } from './cache.service';
 
 @Module({
-  imports: [CM.registerAsync({
-    useFactory: async () => {
-      const host = process.env.REDIS_HOST || 'localhost';
-      const port = process.env.REDIS_PORT || '6379';
-      const password = process.env.REDIS_PASSWORD || '';
-      const dbNumber = process.env.REDIS_DB_NUMBER || '0';
+  imports: [
+    CM.registerAsync({
+      useFactory: () => {
+        const host = process.env.REDIS_HOST || 'localhost';
+        const port = process.env.REDIS_PORT || '6379';
+        const password = process.env.REDIS_PASSWORD || '';
+        const dbNumber = process.env.REDIS_DB_NUMBER || '0';
 
-      const redisUri = password
-        ? `redis://:${password}@${host}:${port}/${dbNumber}`
-        : `redis://${host}:${port}/${dbNumber}`;
+        const redisUri = password
+          ? `redis://:${password}@${host}:${port}/${dbNumber}`
+          : `redis://${host}:${port}/${dbNumber}`;
 
-      return {
-        // here you may have a question, why two and how do they work: from the cache-manager code 
-        // // result = await Promise.race(stores.map(async (store) => store.get(key)));
-        // and per NestJS docs:
-        // // In this example, we've registered two stores: CacheableMemory and KeyvRedis. 
-        // // The CacheableMemory store is a simple in-memory store, while KeyvRedis is a Redis store. 
-        // // The stores array is used to specify the stores you want to use. The first store in the array is the default store, and the rest are fallback stores.
-        // https://docs.nestjs.com/techniques/caching
-        // Well or the nestjs docs are wrong or the behaviour of @nestjs/cache-manager is different from cache-manager
-        stores: [
-          new Keyv({
-            store: new CacheableMemory({ ttl: process.env.LOCAL_CACHE_TTL || 60000, lruSize: Number(process.env.LOCAL_CACHE_LRU_SIZE || 50000) }),
-          }),
-          createKeyv(redisUri)
-        ],
-        nonBlocking: false, // should be blocking because if the local cache is missing a key but it is present in the redis Promise.race will take the first one available. 
-      }
-    }
-  })],
+        return {
+          // here you may have a question, why two and how do they work: from the cache-manager code
+          // // result = await Promise.race(stores.map(async (store) => store.get(key)));
+          // and per NestJS docs:
+          // // In this example, we've registered two stores: CacheableMemory and KeyvRedis.
+          // // The CacheableMemory store is a simple in-memory store, while KeyvRedis is a Redis store.
+          // // The stores array is used to specify the stores you want to use. The first store in the array is the default store, and the rest are fallback stores.
+          // https://docs.nestjs.com/techniques/caching
+          // Well or the nestjs docs are wrong or the behaviour of @nestjs/cache-manager is different from cache-manager
+          stores: [
+            new Keyv({
+              store: new CacheableMemory({
+                ttl: process.env.LOCAL_CACHE_TTL || 60000,
+                lruSize: Number(process.env.LOCAL_CACHE_LRU_SIZE || 50000),
+              }),
+            }),
+            createKeyv(redisUri),
+          ],
+          nonBlocking: false, // should be blocking because if the local cache is missing a key, but it is present in the redis Promise.race will take the first one available.
+        };
+      },
+    }),
+  ],
   providers: [CacheService],
   exports: [CacheService],
 })
-export class CacheModule { }
+export class CacheModule {}

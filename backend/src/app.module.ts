@@ -15,9 +15,9 @@ import { AuthModule } from './auth/auth.module';
     CacheModule,
     AuthModule,
     TypeOrmModule.forFeature([User]),
-    AuthModule
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

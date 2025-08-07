@@ -1,9 +1,11 @@
+// noinspection JSIgnoredPromiseFromCall
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { isDev } from './consts';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import * as cookieParser from 'cookie-parser'
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,16 +17,15 @@ async function bootstrap() {
     credentials: true,
   });
 
-  app.useGlobalPipes(new ValidationPipe({
-    disableErrorMessages: !isDev,
-    whitelist: true,
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      disableErrorMessages: !isDev,
+      whitelist: true,
+    }),
+  );
 
-  SwaggerModule.setup('api', app,
-    () => SwaggerModule.createDocument(
-      app,
-      new DocumentBuilder().build()
-    )
+  SwaggerModule.setup('api', app, () =>
+    SwaggerModule.createDocument(app, new DocumentBuilder().build()),
   );
 
   await app.listen(process.env.PORT ?? 3000);

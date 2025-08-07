@@ -10,9 +10,9 @@ export class AppService {
     private readonly cacheService: CacheService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) { }
+  ) {}
 
-  async getHello(): Promise<string> {
+  getHello(): string {
     return 'Hello World!';
   }
 }

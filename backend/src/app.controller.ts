@@ -4,16 +4,16 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) { }
+  constructor(private readonly appService: AppService) {}
 
   @Get()
-  async getHello(): Promise<string> {
+  getHello(): string {
     return this.appService.getHello();
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('test')
-  async authTest(): Promise<string> {
-    return "test"
+  authTest(): string {
+    return 'test';
   }
 }

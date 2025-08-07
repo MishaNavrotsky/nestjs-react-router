@@ -20,6 +20,6 @@ import { CacheModule } from 'src/cache/cache.module';
     CacheModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy]
+  providers: [AuthService, LocalStrategy, JwtStrategy],
 })
-export class AuthModule { }
+export class AuthModule {}

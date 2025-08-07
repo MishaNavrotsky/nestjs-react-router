@@ -1,4 +1,14 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import SignInUserDto from './dtos/signin-user.dto';
 import SignUpUserDto from './dtos/signup-user.dto';
@@ -13,7 +23,7 @@ export class AuthController {
   private static readonly JWT_TOKEN_COOKIE_NAME = 'access_token';
   private static readonly REFRESH_TOKEN_COOKIE_NAME = 'refresh_token';
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   setJwtCookies(res: Response, jwtToken: string, refreshToken: string) {
     res.cookie(AuthController.JWT_TOKEN_COOKIE_NAME, jwtToken, {
@@ -34,7 +44,12 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('signin')
-  async signIn(@Req() req: AuthenticatedRequest, @Res({ passthrough: true }) res: Response, @Body() signInDto: SignInUserDto) {
+  async signIn(
+    @Req() req: AuthenticatedRequest,
+    @Res({ passthrough: true }) res: Response,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    @Body() _signInDto: SignInUserDto,
+  ) {
     const result = await this.authService.signInUser(req.user);
     this.setJwtCookies(res, result.access_token, result.refresh_token);
     return result;
@@ -43,7 +58,10 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('signout')
-  async signOut(@Req() req: AuthenticatedRequest, @Res({ passthrough: true }) res: Response) {
+  async signOut(
+    @Req() req: AuthenticatedRequest,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     await this.authService.signOut(req.user);
     res.clearCookie(AuthController.JWT_TOKEN_COOKIE_NAME);
   }
@@ -56,9 +74,16 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('refresh')
-  async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const jwtToken = req.cookies?.[AuthController.JWT_TOKEN_COOKIE_NAME];
-    const refreshToken = req.cookies?.[AuthController.REFRESH_TOKEN_COOKIE_NAME];
+  async refresh(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const jwtToken = req.cookies?.[
+      AuthController.JWT_TOKEN_COOKIE_NAME
+    ] as string;
+    const refreshToken = req.cookies?.[
+      AuthController.REFRESH_TOKEN_COOKIE_NAME
+    ] as string;
 
     if (!jwtToken || !refreshToken) throw new UnauthorizedException();
 

@@ -1,5 +1,11 @@
 // create-user.dto.ts
-import { IsEmail, IsNotEmpty, IsOptional, MaxLength, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export default class SignUpUserDto {
   @IsEmail()
@@ -8,7 +14,6 @@ export default class SignUpUserDto {
   @IsNotEmpty()
   @MinLength(6)
   password: string;
-
 
   @IsOptional()
   @MaxLength(100)

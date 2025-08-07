@@ -1,4 +1,4 @@
-import { Entity, Column, TableForeignKey, ManyToMany, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne } from 'typeorm';
 import BaseModel from './base.entity';
 import { User } from './user.entity';
 
